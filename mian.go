@@ -18,6 +18,7 @@ func main() {
 }
 
 func wsHandler(w http.ResponseWriter, r *http.Request) {
+	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -29,8 +30,9 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 			break
 		}
-	}
 
-	log.Println(string(msg))
-	conn.WriteMessage(websocket.TextMessage, string(msg))
+		// Use the msg variable
+		log.Println(string(msg))
+		conn.WriteMessage(websocket.TextMessage, msg)
+	}
 }
